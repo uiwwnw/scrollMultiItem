@@ -63,7 +63,7 @@ var scrollMultiItem = function(e, opt) {
         scr.oldScroll = scr.oldScroll ===undefined?0:scr.oldScroll;
         scr.updown = scr.oldScroll > scr.scrollY?'up':'down';
         
-        if(Math.abs(scr.oldScroll - scr.scrollY) > opt.performance) {
+        if(Math.abs(scr.oldScroll - scr.scrollY) >= opt.performance) {
             for(var j = 0; j < i; j++) {
                 ctr.find(function(e,i) {
                     if(scr.scrollY >= e.wrapTop && scr.scrollY <= e.wrapBottom) {
