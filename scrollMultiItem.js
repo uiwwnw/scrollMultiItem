@@ -7,7 +7,7 @@ var scrollMultiItem = function(e, opt) {
     var _this = this;
     var ctr = [];
     var scr = {};
-    scr.scrollY = Math.abs(window.scrollY);
+    scr.scrollY = window.scrollY;
     opt = opt === undefined?{}:opt;
     var idx = opt.idx === undefined?0:opt.idx;
     var currentIdx = opt.currentIdx === undefined?0:opt.currentIdx;
@@ -84,13 +84,12 @@ var scrollMultiItem = function(e, opt) {
             if (e.itemAbsBottom < scr.scrollY) {
                 return false;
             }
-            if (e.itemAbsTop > scr.scrollY) {
-                return false;
-            } else {
+            if (e.itemAbsTop < scr.scrollY) {
                 currentIdx = j;
             }
             if (j === currentIdx) {
                 (e.itemAbsMaxTop <= scr.scrollY)&&(scr.scrollY = e.itemAbsMaxTop);
+                (e.itemAbsTop >= scr.scrollY)&&(scr.scrollY = e.itemAbsTop);
                 var top = -e.itemAbsTop + e.itemTop + scr.scrollY;
                 e.item.setAttribute('style', 'top: ' + top + 'px;' );
             }
