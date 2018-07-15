@@ -1,5 +1,5 @@
 /*
-  scrollMultiItem v0.1.2
+  scrollMultiItem v0.1.1
   http:/github.com/uiwwnw/scrollMultiItem/
   copyright uiwwnw
 */
@@ -7,8 +7,10 @@ var scrollMultiItem = function(e, opt) {
     var _this = this;
     var ctr = [];
     var scr = {};
+    var sto;
     scr.scrollY = window.scrollY;
     opt = opt === undefined?{}:opt;
+    opt.performance = opt.performance === undefined?1:opt.performance;
     var idx = opt.idx === undefined?0:opt.idx;
     var currentIdx = opt.currentIdx === undefined?0:opt.currentIdx;
     var wrap = document.querySelectorAll(e);
@@ -58,19 +60,25 @@ var scrollMultiItem = function(e, opt) {
     }
     var fnScroll = function() {
         scr.scrollY = Math.abs(window.scrollY);
+        scr.oldScroll = scr.oldScroll ===undefined?0:scr.oldScroll;
         scr.updown = scr.oldScroll > scr.scrollY?'up':'down';
-        scr.oldScroll = scr.scrollY;
-        // _this.chk();
-        for(var j = 0; j < i; j++) {
-            ctr.find(function(e,i) {
-                if(scr.scrollY >= e.wrapTop && scr.scrollY <= e.wrapBottom) {
-                    idx = i;
-                } else {
-                    return false;
-                }
-            })
+        
+        if(Math.abs(scr.oldScroll - scr.scrollY) > opt.performance) {
+            for(var j = 0; j < i; j++) {
+                ctr.find(function(e,i) {
+                    if(scr.scrollY >= e.wrapTop && scr.scrollY <= e.wrapBottom) {
+                        idx = i;
+                    } else {
+                        return false;
+                    }
+                })
+            }
+            _this.idx(idx);
+            // console.log('performance');
+            scr.oldScroll = scr.scrollY;
         }
-        _this.idx(idx);
+        // console.log('normal');
+        // clearTimeout(sto);
     }
     this.idx = function(idx) {
         ctr[idx].child.find(function(e, j) {

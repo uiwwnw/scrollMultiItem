@@ -9,11 +9,13 @@
     <style>
         .contents {
             width: 300px;
+            margin: auto;
         }
         .box  {
             position: relative;
             min-height: 400px;
             font-size: 20px;
+            border: 1px solid;
         }
 
         .item {
@@ -26,7 +28,7 @@
             line-height: 200px;
             text-align: center;
             background: #000;
-            transition: .1s top;
+            transition: .2s top;
             color: #fff;
         }
     </style>
@@ -128,7 +130,8 @@
     <script>
         var aaa = new scrollMultiItem('.contents', {
             box: '.box',
-            item: '.item'
+            item: '.item',
+            performance: 1
         })
     </script>
 </body>
