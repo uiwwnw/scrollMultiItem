@@ -3,29 +3,29 @@
   http:/github.com/uiwwnw/scrollMultiItem/
   copyright uiwwnw
 */
-var scrollMultiItem = function(e, opt) {
+var scrollMultiItem = function (e, opt) {
     var _this = this;
     var ctr = [];
     var scr = {};
     var sto;
     scr.scrollY = window.scrollY;
-    opt = opt === undefined?{}:opt;
-    opt.performance = opt.performance === undefined?1:opt.performance;
-    var idx = opt.idx === undefined?0:opt.idx;
-    var currentIdx = opt.currentIdx === undefined?0:opt.currentIdx;
+    opt = opt === undefined ? {} : opt;
+    opt.performance = opt.performance === undefined ? 1 : opt.performance;
+    var idx = opt.idx === undefined ? 0 : opt.idx;
+    var currentIdx = opt.currentIdx === undefined ? 0 : opt.currentIdx;
     var wrap = document.querySelectorAll(e);
     var i = wrap.length;
-    if(1 === 0){return false};
-    this.ele = function() {
-        var _fnChild = function(e) {
+    if (1 === 0) { return false };
+    this.ele = function () {
+        var _fnChild = function (e) {
             var a = e.querySelectorAll(opt.box);
             var b = e.querySelectorAll(opt.item);
-            if(a.length !== b.length) {
+            if (a.length !== b.length) {
                 return false;
             };
             var j = a.length;
             var _ctr = [];
-            for(var k = 0; k < j; k++) {
+            for (var k = 0; k < j; k++) {
                 var __ctr = {
                     // box: a[k],
                     boxTop: a[k].offsetTop,
@@ -45,8 +45,8 @@ var scrollMultiItem = function(e, opt) {
 
             return _ctr;
         }
-        
-        for(var k = 0; k < i; k++) {
+
+        for (var k = 0; k < i; k++) {
             var _ctr = {
                 wrap: wrap[k],
                 wrapTop: wrap[k].offsetTop,
@@ -58,15 +58,27 @@ var scrollMultiItem = function(e, opt) {
             ctr.push(_ctr);
         }
     }
-    var fnScroll = function() {
+    var ready = function (fn) {
+        if (document.readyState != 'loading') {
+            fn();
+        } else if (document.addEventListener) {
+            document.addEventListener('DOMContentLoaded', fn);
+        } else {
+            document.attachEvent('onreadystatechange', function () {
+                if (document.readyState != 'loading')
+                    fn();
+            });
+        }
+    }
+    var fnScroll = function () {
         scr.scrollY = Math.abs(window.scrollY);
-        scr.oldScroll = scr.oldScroll ===undefined?0:scr.oldScroll;
-        scr.updown = scr.oldScroll > scr.scrollY?'up':'down';
-        
-        if(Math.abs(scr.oldScroll - scr.scrollY) >= opt.performance) {
-            for(var j = 0; j < i; j++) {
-                ctr.find(function(e,i) {
-                    if(scr.scrollY >= e.wrapTop && scr.scrollY <= e.wrapBottom) {
+        scr.oldScroll = scr.oldScroll === undefined ? 0 : scr.oldScroll;
+        scr.updown = scr.oldScroll > scr.scrollY ? 'up' : 'down';
+
+        if (Math.abs(scr.oldScroll - scr.scrollY) >= opt.performance) {
+            for (var j = 0; j < i; j++) {
+                ctr.find(function (e, i) {
+                    if (scr.scrollY >= e.wrapTop && scr.scrollY <= e.wrapBottom) {
                         idx = i;
                     } else {
                         return false;
@@ -80,8 +92,8 @@ var scrollMultiItem = function(e, opt) {
         // console.log('normal');
         // clearTimeout(sto);
     }
-    this.idx = function(idx) {
-        ctr[idx].child.find(function(e, j) {
+    this.idx = function (idx) {
+        ctr[idx].child.find(function (e, j) {
             if (currentIdx !== 0 && j === currentIdx - 1 && scr.updown === 'up') {
                 var top = e.itemMaxTop;
                 e.item.setAttribute('style', 'top: ' + top + 'px;');
@@ -96,24 +108,24 @@ var scrollMultiItem = function(e, opt) {
                 currentIdx = j;
             }
             if (j === currentIdx) {
-                (e.itemAbsMaxTop <= scr.scrollY)&&(scr.scrollY = e.itemAbsMaxTop);
-                (e.itemAbsTop >= scr.scrollY)&&(scr.scrollY = e.itemAbsTop - e.itemTop);
+                (e.itemAbsMaxTop <= scr.scrollY) && (scr.scrollY = e.itemAbsMaxTop);
+                (e.itemAbsTop >= scr.scrollY) && (scr.scrollY = e.itemAbsTop - e.itemTop);
                 var top = -e.itemAbsTop + e.itemTop + scr.scrollY;
-                e.item.setAttribute('style', 'top: ' + top + 'px;' );
+                e.item.setAttribute('style', 'top: ' + top + 'px;');
             }
         })
     }
-    
-    this.eventAdd = function() {
+
+    this.eventAdd = function () {
         window.addEventListener('scroll', fnScroll);
     }
-    this.eventRemove = function() {
+    this.eventRemove = function () {
         window.removeEventListener('scroll', fnScroll);
     }
     // this.chk = function() {
     // }
-    this.init = function() {
-        _this.ele();
+    this.init = function () {
+        ready(_this.ele);
         _this.eventAdd();
     }();
 }
