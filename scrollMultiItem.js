@@ -97,7 +97,7 @@ var scrollMultiItem = function(e, opt) {
             }
             if (j === currentIdx) {
                 (e.itemAbsMaxTop <= scr.scrollY)&&(scr.scrollY = e.itemAbsMaxTop);
-                (e.itemAbsTop >= scr.scrollY)&&(scr.scrollY = e.itemAbsTop);
+                (e.itemAbsTop >= scr.scrollY)&&(scr.scrollY = e.itemAbsTop - e.itemTop);
                 var top = -e.itemAbsTop + e.itemTop + scr.scrollY;
                 e.item.setAttribute('style', 'top: ' + top + 'px;' );
             }
