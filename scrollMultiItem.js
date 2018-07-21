@@ -1,5 +1,5 @@
 /*
-  scrollMultiItem v0.1.1
+  scrollMultiItem v0.2.0
   http:/github.com/uiwwnw/scrollMultiItem/
   copyright uiwwnw
 */
@@ -15,7 +15,7 @@ var scrollMultiItem = function (e, opt) {
     var currentIdx = opt.currentIdx === undefined ? 0 : opt.currentIdx;
     var wrap = document.querySelectorAll(e);
     var i = wrap.length;
-    if (1 === 0) { return false };
+    if (i === 0) { return false };
     this.ele = function () {
         var _fnChild = function (e) {
             var a = e.querySelectorAll(opt.box);
@@ -51,7 +51,10 @@ var scrollMultiItem = function (e, opt) {
                 wrap: wrap[k],
                 wrapTop: wrap[k].offsetTop,
                 wrapHeight: wrap[k].offsetHeight,
-                wrapBottom: wrap[k].offsetTop + wrap[k].offsetHeight
+                wrapBottom: wrap[k].offsetTop + wrap[k].offsetHeight,
+                totalItem: opt.totalItem === undefined?false:wrap[k].querySelector(opt.totalItem),
+                totalItemTop: opt.totalItem === undefined?false:wrap[k].querySelector(opt.totalItem).offsetTop,
+                totalItemHeight: opt.totalItem === undefined?false:wrap[k].querySelector(opt.totalItem).offsetHeight
             };
             var _child = _fnChild(_ctr.wrap);
             _ctr.child = _child;
@@ -93,6 +96,26 @@ var scrollMultiItem = function (e, opt) {
         // clearTimeout(sto);
     }
     this.idx = function (idx) {
+        // if(opt.totalItem){
+        var totalTop = scr.scrollY - ctr[idx].wrapTop;
+        if (ctr[idx].wrapTop > scr.scrollY) {
+            if(opt.totalItem){
+                ctr[idx].totalItem.removeAttribute('style');
+            }
+            ctr[idx].child[0].item.removeAttribute('style');
+            return false;
+        }
+        if (ctr[idx].wrapBottom - ctr[idx].totalItemHeight - ctr[idx].totalItemTop * 2  < scr.scrollY) {
+            if(opt.totalItem){
+                totalTop = ctr[idx].wrapBottom  - ctr[idx].wrapTop- ctr[idx].totalItemHeight - ctr[idx].totalItemTop * 2;
+                ctr[idx].totalItem.setAttribute('style', 'top: ' + totalTop + 'px;');
+            }
+            totalTop = ctr[idx].child[ctr[idx].child.length - 1].itemMaxTop;
+            ctr[idx].child[ctr[idx].child.length - 1].item.setAttribute('style', 'top: ' + totalTop + 'px;');
+            return false;
+        }
+        ctr[idx].totalItem.setAttribute('style', 'top: ' + totalTop + 'px;');
+        // }
         ctr[idx].child.find(function (e, j) {
             if (currentIdx !== 0 && j === currentIdx - 1 && scr.updown === 'up') {
                 var top = e.itemMaxTop;
@@ -101,16 +124,17 @@ var scrollMultiItem = function (e, opt) {
             if (currentIdx !== i && j === currentIdx + 1) {
                 e.item.removeAttribute('style');
             }
-            if (e.itemAbsBottom < scr.scrollY) {
+           
+            if (e.itemAbsBottom < scr.scrollY - ctr[idx].wrapTop) {
                 return false;
             }
-            if (e.itemAbsTop < scr.scrollY) {
+            if (e.itemAbsTop < scr.scrollY - ctr[idx].wrapTop) {
                 currentIdx = j;
             }
             if (j === currentIdx) {
-                (e.itemAbsMaxTop <= scr.scrollY) && (scr.scrollY = e.itemAbsMaxTop);
-                (e.itemAbsTop >= scr.scrollY) && (scr.scrollY = e.itemAbsTop - e.itemTop);
-                var top = -e.itemAbsTop + e.itemTop + scr.scrollY;
+                (e.itemAbsMaxTop <= scr.scrollY - ctr[idx].wrapTop) && (scr.scrollY = e.itemAbsMaxTop + ctr[idx].wrapTop);
+                (e.itemAbsTop >= scr.scrollY - ctr[idx].wrapTop) && (scr.scrollY = e.itemAbsTop - e.itemTop + ctr[idx].wrapTop);
+                var top = -e.itemAbsTop + e.itemTop + scr.scrollY - ctr[idx].wrapTop;
                 e.item.setAttribute('style', 'top: ' + top + 'px;');
             }
         })
