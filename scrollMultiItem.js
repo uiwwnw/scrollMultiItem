@@ -1,5 +1,5 @@
 /*
-  scrollMultiItem v0.2.0
+  scrollMultiItem v0.2.1
   http:/github.com/uiwwnw/scrollMultiItem/
   copyright uiwwnw
 */
@@ -7,7 +7,6 @@ var scrollMultiItem = function (e, opt) {
     var _this = this;
     var ctr = [];
     var scr = {};
-    var sto;
     scr.scrollY = window.scrollY;
     opt = opt === undefined ? {} : opt;
     opt.performance = opt.performance === undefined ? 1 : opt.performance;
@@ -26,17 +25,26 @@ var scrollMultiItem = function (e, opt) {
             var j = a.length;
             var _ctr = [];
             for (var k = 0; k < j; k++) {
+                var _boxTop = a[k].offsetTop;
+                var _boxHeight = a[k].offsetHeight;
+                var _item =  b[k];
+                var _itemTop =  _item.offsetTop;
+                var _itemHeight =  _item.offsetHeight;
+                var _itemMaxTop =  _boxHeight - (_itemTop * 2) - _itemHeight;
+                var _itemAbsTop =  _boxTop + _itemTop;
+                var _itemAbsMaxTop =  _boxTop + _boxHeight - _itemHeight - _itemTop * 2;
+                var _itemAbsBottom =  _boxTop + _boxHeight;
                 var __ctr = {
                     // box: a[k],
-                    boxTop: a[k].offsetTop,
+                    boxTop: _boxTop,
                     // boxHeight: a[k].offsetHeight,
                     // boxBottom: a[k].offsetTop + a[k].offsetHeight,
-                    item: b[k],
-                    itemTop: b[k].offsetTop,
-                    itemMaxTop: a[k].offsetHeight - (b[k].offsetTop * 2) - b[k].offsetHeight,
-                    itemAbsTop: a[k].offsetTop + b[k].offsetTop,
-                    itemAbsMaxTop: a[k].offsetTop + a[k].offsetHeight - b[k].offsetHeight - b[k].offsetTop * 2,
-                    itemAbsBottom: a[k].offsetTop + a[k].offsetHeight,
+                    item: _item,
+                    itemTop: _itemTop,
+                    itemMaxTop: _itemMaxTop,
+                    itemAbsTop: _itemAbsTop,
+                    itemAbsMaxTop: _itemAbsMaxTop,
+                    itemAbsBottom: _itemAbsBottom
                     // itemHeight: b[k].offsetHeight,
                     // itemBottom: b[k].offsetTop + b[k].offsetHeight
                 };
@@ -47,14 +55,21 @@ var scrollMultiItem = function (e, opt) {
         }
 
         for (var k = 0; k < i; k++) {
+            var _wrap = wrap[k];
+            var _wrapTop = _wrap.offsetTop;
+            var _wrapHeight = _wrap.offsetHeight;
+            var _wrapBottom = _wrapTop + _wrapHeight;
+            var _totalItem = opt.totalItem === undefined?false:wrap[k].querySelector(opt.totalItem);
+            var _totalItemTop = _totalItem === false?false:_totalItem.offsetTop;
+            var _totalItemHeight = _totalItem === false?false:_totalItem.offsetHeight;
             var _ctr = {
-                wrap: wrap[k],
-                wrapTop: wrap[k].offsetTop,
-                wrapHeight: wrap[k].offsetHeight,
-                wrapBottom: wrap[k].offsetTop + wrap[k].offsetHeight,
-                totalItem: opt.totalItem === undefined?false:wrap[k].querySelector(opt.totalItem),
-                totalItemTop: opt.totalItem === undefined?false:wrap[k].querySelector(opt.totalItem).offsetTop,
-                totalItemHeight: opt.totalItem === undefined?false:wrap[k].querySelector(opt.totalItem).offsetHeight
+                wrap: _wrap,
+                wrapTop: _wrapTop,
+                wrapHeight: _wrapHeight,
+                wrapBottom: _wrapBottom,
+                totalItem: _totalItem,
+                totalItemTop: _totalItemTop,
+                totalItemHeight: _totalItemHeight
             };
             var _child = _fnChild(_ctr.wrap);
             _ctr.child = _child;
@@ -110,8 +125,9 @@ var scrollMultiItem = function (e, opt) {
                 totalTop = ctr[idx].wrapBottom  - ctr[idx].wrapTop- ctr[idx].totalItemHeight - ctr[idx].totalItemTop * 2;
                 ctr[idx].totalItem.setAttribute('style', 'top: ' + totalTop + 'px;');
             }
-            totalTop = ctr[idx].child[ctr[idx].child.length - 1].itemMaxTop;
-            ctr[idx].child[ctr[idx].child.length - 1].item.setAttribute('style', 'top: ' + totalTop + 'px;');
+            var lastItem = ctr[idx].child[ctr[idx].child.length - 1];
+            totalTop = lastItem.itemMaxTop;
+            lastItem.item.setAttribute('style', 'top: ' + totalTop + 'px;');
             return false;
         }
         ctr[idx].totalItem.setAttribute('style', 'top: ' + totalTop + 'px;');

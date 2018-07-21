@@ -7,6 +7,6 @@
 
 [jsfiddle's demo](https://jsfiddle.net/uiwwnw/hbafLn0w/)
 
-#### scrollMultiItem v0.2.0
+#### scrollMultiItem v0.2.1
 #### https://github.com/uiwwnw/scrollMultiItem.git
 #### copyright uiwwnw
