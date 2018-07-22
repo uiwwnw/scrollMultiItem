@@ -144,12 +144,12 @@ var scrollMultiItem = function (e, opt) {
             if (e.itemAbsBottom < scr.scrollY - ctr[idx].wrapTop) {
                 return false;
             }
-            if (e.itemAbsTop < scr.scrollY - ctr[idx].wrapTop) {
+            if (e.itemAbsTop - e.itemTop < scr.scrollY - ctr[idx].wrapTop) {
                 currentIdx = j;
             }
             if (j === currentIdx) {
                 (e.itemAbsMaxTop <= scr.scrollY - ctr[idx].wrapTop) && (scr.scrollY = e.itemAbsMaxTop + ctr[idx].wrapTop);
-                (e.itemAbsTop >= scr.scrollY - ctr[idx].wrapTop) && (scr.scrollY = e.itemAbsTop - e.itemTop + ctr[idx].wrapTop);
+                (e.itemAbsTop - e.itemTop >= scr.scrollY - ctr[idx].wrapTop) && (scr.scrollY = e.itemAbsTop - e.itemTop + ctr[idx].wrapTop);
                 var top = -e.itemAbsTop + e.itemTop + scr.scrollY - ctr[idx].wrapTop;
                 e.item.setAttribute('style', 'top: ' + top + 'px;');
             }

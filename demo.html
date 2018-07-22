@@ -32,6 +32,7 @@
         }
 
         .item {
+            z-index: 2;
             position: absolute;
             top: 0;
             left: 0;
@@ -41,21 +42,22 @@
             line-height: 200px;
             text-align: center;
             background: #000;
-            transition: .1s top ease-out;
+            /* transition: .09s top ease-out; */
             color: #fff;
         }
 
         .totalItem {
+            z-index: 2;
             position: absolute;
             top: 0;
             right: 0;
             width: 100px;
-            height: 200px;
+            height: 160px;
             margin: 10px;
             line-height: 200px;
             text-align: center;
             background: #000;
-            transition: .3s top ease-out;
+            /* transition: .11s top ease-out; */
             color: #fff;
         }
     </style>
@@ -468,8 +470,7 @@
         var aaa = new scrollMultiItem('.contents', {
             box: '.box',
             item: '.item',
-            totalItem: '.totalItem',
-            performance: 1
+            totalItem: '.totalItem'
         })
 
     </script>
